@@ -8,6 +8,11 @@ import matplotlib.pyplot as plt
 from calculations import calculate_metrics
 from pdf_generator import generate_pdf
 
+# Title
+#st.markdown("<h1 style='text-align: center;'>🏡 Real Estate Deal Evaluator</h1>", unsafe_allow_html=True)
+st.markdown("""<div style='text-align: center; margin-top: -40px;'><h1>🏡 Real Estate Deal Evaluator</h1></div>""", unsafe_allow_html=True)
+#st.markdown("### 🧾 Property & Loan Inputs")
+
 load_dotenv()
 
 # Sidebar inputs
