@@ -151,7 +151,7 @@ if st.button("Send Email Report") and recipient_email:
         st.write("📤 Attempting to send email...")
         msg = EmailMessage()
         msg["Subject"] = "Your Real Estate Evaluation Report"
-        msg["From"] = os.getenv("GMAIL_USER")
+        msg["From"] = os.getenv("EMAIL_USER")  # ✅ From address
         msg["To"] = recipient_email
         msg.set_content("Please find attached your real estate evaluation report.")
         pdf_bytes.seek(0)
@@ -159,7 +159,7 @@ if st.button("Send Email Report") and recipient_email:
 
         with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
             smtp.starttls()
-            smtp.login(os.getenv("GMAIL_USER"), os.getenv("GMAIL_PASSWORD"))
+            smtp.login(os.getenv("EMAIL_USER"), os.getenv("EMAIL_PASSWORD")) # GMAIL was changed to EMAIL!!!
             smtp.send_message(msg)
 
         st.success(f"✅ Report sent to {recipient_email}!")
