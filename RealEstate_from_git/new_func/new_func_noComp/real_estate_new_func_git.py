@@ -9,6 +9,30 @@ from calculations import calculate_metrics
 from pdf_generator import generate_pdf
 from pdf_generator import generate_ai_verdict
 
+# 🔐 Password Gate — load from .env or fallback
+load_dotenv()
+# Default password (can be overridden by .env)
+APP_PASSWORD = os.getenv("APP_PASSWORD", "SmartInvest1!")
+
+# Use session state to remember successful login
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+# Show password input only if not yet authenticated
+if not st.session_state.authenticated:
+    st.title("🏠 Real Estate Deal Evaluator")
+    password = st.text_input("🔒 Please enter access password", type="password")
+
+    if password == APP_PASSWORD:
+        st.session_state.authenticated = True
+        st.rerun()  # 🔁 Clear the password input and reload
+    elif password:
+        st.error("❌ Incorrect password. Please try again.")
+    st.stop()  # 🔒 Block access until correct
+    
+# ✅ MAIN APP STARTS HERE — only shown after password is correct
+#st.title("🏠 Real Estate Deal Evaluator")    
+
 
 # Title
 #st.markdown("<h1 style='text-align: center;'>🏡 Real Estate Deal Evaluator</h1>", unsafe_allow_html=True)
