@@ -1,3 +1,15 @@
+<<<<<<< HEAD
 .env
 *.pyc
+=======
+# Ignore environment files
+.env
+secrets.toml
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore system files
+>>>>>>> 066e6fa (📊 Initial push: full app with IRR, Equity Multiple, and updated PDF manual)
 .DS_Store

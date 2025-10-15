@@ -5,7 +5,6 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 
-<<<<<<< HEAD
 # ✅ Keys to skip (prevent duplicates like "10yr Cash Flow")
 skip_keys = {"10Yr Cash Flow", "10yr Cash Flow"}
 
@@ -13,10 +12,7 @@ skip_keys = {"10Yr Cash Flow", "10yr Cash Flow"}
 rename_keys = {
     "roi_list": "Annual ROI % (by year)",
     "10yr Rents": "Annual Rents $ (by year)",
-    "Final Year ROI (%)": "Final Year ROI (%)",
-    "Multi-Year Cash Flow": "Multi-Year Cash Flow",
-    "Annual ROI % (by year)": "Annual ROI % (by year)",
-    "Annual Rents $ (by year)": "Annual Rents $ (by year)" # placeholder in case it's passed in future
+    "Final Year ROI (%)": "Final Year ROI (%)"  # placeholder in case it's passed in future
 }
 
 # ✅ Order you want in the PDF
@@ -24,7 +20,6 @@ preferred_order = [
     "Cap Rate (%)",
     "Cash-on-Cash Return (%)",
     "Final Year ROI (%)",
-    "First Year Cash Flow ($)",
     "Annual Cash Flow ($)",
     "Monthly Mortgage ($)",
     "Grade",
@@ -34,17 +29,20 @@ preferred_order = [
 ]
 
 def format_display_value(key, value):
-    """Format all numbers according to the agreed rules."""
     if isinstance(value, (float, int)):
             # Rule-based rounding
-        if abs(value) >= 1:
-            # round to nearest integer, no decimals
-            return str(int(round(value)))
-        elif abs(value) > 0:
-            # keep up to 2 decimals for small fractional values
-            return f"{value:.2f}"
+        if "ROI" in key:
+            return f"{round(value, 2)}"
+        elif "Cap Rate" in key:
+            return f"{round(value, 1)}"
+        elif "Cash-on-Cash Return" in key:
+            return f"{round(value, 2)}"
+        elif "Cash Flow" in key or "Mortgage" in key:
+            return f"{round(value, 2)}"
+        elif "Rents" in key:
+            return f"{round(value)}"
         else:
-            return "0"
+            return str(round(value, 2))
     return str(value)
 
 # ✅ Define AI Verdict function BEFORE generate_pdf
@@ -107,18 +105,10 @@ def generate_ai_verdict(metrics: dict) -> tuple[str, str]:
     return summary, grade
 
 def generate_pdf(property_data, metrics, summary_text):
-=======
-def generate_pdf(user_email, cash_flow, appreciation, total_return, roi_list, summary_text):
->>>>>>> 066e6fa (📊 Initial push: full app with IRR, Equity Multiple, and updated PDF manual)
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter)
     elements = []
     styles = getSampleStyleSheet()
-
-    elements.append(Paragraph("📊 Real Estate ROI Report", styles["Title"]))
-    elements.append(Spacer(1, 12))
-    elements.append(Paragraph(f"📧 Report for: {user_email}", styles["Normal"]))
-    elements.append(Spacer(1, 12))
 
     # Title
     elements.append(Paragraph("Real Estate Evaluator Report", styles["Title"]))
@@ -155,25 +145,27 @@ def generate_pdf(user_email, cash_flow, appreciation, total_return, roi_list, su
 
     
     # ✅ Ordered rendering
-    for key in preferred_order:
-    
-        if key in metrics and key not in skip_keys:
-            value = metrics[key]
-            if isinstance(value, list):
-                grouped = [", ".join(format_display_value(key, val) for val in value[i:i+5])
-                           for i in range(0, len(value), 5)
-                ]
-                wrapped = "<br/>".join(grouped)
-                metrics_cleaned.append([key, Paragraph(wrapped, styles["Normal"])])
-            elif isinstance(value, float):
-                metrics_cleaned.append([key, format_display_value(key, value)])
-            elif isinstance(value, str):
-                if key == "AI Verdict":
-                    continue  # Skip duplicate
-                metrics_cleaned.append([key, Paragraph(value, styles["Normal"])])
-            else:
-                metrics_cleaned.append([key, value])   
+for key in preferred_order:
+    if key in metrics and key not in skip_keys:
+        value = metrics[key]
 
+        if isinstance(value, list):
+            grouped = [
+                ", ".join(format_display_value(key, val) for val in value[i:i+5])
+                for i in range(0, len(value), 5)
+            ]
+            wrapped = "<br/>".join(grouped)
+            metrics_cleaned.append([key, Paragraph(wrapped, styles["Normal"])])
+
+        elif isinstance(value, str):
+            if key == "AI Verdict":
+                continue  # Skip duplicate
+            metrics_cleaned.append([key, Paragraph(value, styles["Normal"])])
+
+        else:
+            metrics_cleaned.append([key, format_display_value(key, value)])
+
+            
     table_metrics = Table(metrics_cleaned, colWidths=[200, 350])  # wider cell
     table_metrics.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),

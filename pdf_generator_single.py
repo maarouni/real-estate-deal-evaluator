@@ -5,7 +5,6 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 
-<<<<<<< HEAD
 # ✅ Keys to skip (prevent duplicates like "10yr Cash Flow")
 skip_keys = {"10Yr Cash Flow", "10yr Cash Flow"}
 
@@ -107,18 +106,10 @@ def generate_ai_verdict(metrics: dict) -> tuple[str, str]:
     return summary, grade
 
 def generate_pdf(property_data, metrics, summary_text):
-=======
-def generate_pdf(user_email, cash_flow, appreciation, total_return, roi_list, summary_text):
->>>>>>> 066e6fa (📊 Initial push: full app with IRR, Equity Multiple, and updated PDF manual)
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter)
     elements = []
     styles = getSampleStyleSheet()
-
-    elements.append(Paragraph("📊 Real Estate ROI Report", styles["Title"]))
-    elements.append(Spacer(1, 12))
-    elements.append(Paragraph(f"📧 Report for: {user_email}", styles["Normal"]))
-    elements.append(Spacer(1, 12))
 
     # Title
     elements.append(Paragraph("Real Estate Evaluator Report", styles["Title"]))
