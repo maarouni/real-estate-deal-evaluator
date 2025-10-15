@@ -5,8 +5,4 @@ python-dotenv>=1.0.0
 reportlab>=4.0
 numpy
 pandas
-<<<<<<< HEAD
-dotenv
-=======
 numpy-financial>=1.0.0
->>>>>>> 066e6fa (📊 Initial push: full app with IRR, Equity Multiple, and updated PDF manual)
