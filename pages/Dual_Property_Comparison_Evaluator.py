@@ -57,7 +57,14 @@ st.markdown(
     "<p style='font-size:18px; color:white; font-weight:bold;'>Input real numbers for Property A & B to model ROI, cash flow, and appreciation.</p>",
     unsafe_allow_html=True
 )
-
+st.markdown("---")
+with open("User_Manual_Investment_Metrics_Explained_Styled_Final.pdf", "rb") as f:
+    st.download_button(
+        label="📘 Download User Manual (PDF)",
+        data=f,
+        file_name="Investment_Metrics_User_Guide.pdf",
+        mime="application/pdf"
+    )
 
     # Sidebar Title
 #sidebar.markdown("## 🧾 Shared Financial Inputs")
