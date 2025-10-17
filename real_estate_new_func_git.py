@@ -6,8 +6,8 @@ import smtplib
 from email.message import EmailMessage
 import matplotlib.pyplot as plt
 from calculations import calculate_metrics
-from pdf_generator_single import generate_pdf
-from pdf_generator_single import generate_ai_verdict
+from pdf_generator import generate_pdf
+from pdf_generator import generate_ai_verdict
 
 # 🔐 Password Gate — load from .env or fallback
 load_dotenv()
@@ -77,9 +77,6 @@ metrics = calculate_metrics(
     rent_growth_rate,
     time_horizon
 )
-irr_value = metrics.get("irr (%)", 0)
-#st.metric("IRR (%)", round(irr_value, 2))
-
 # Prepare inputs and call AI verdict generator
 verdict_input = {
     "ROI (%)": metrics.get("ROI (%)"),
@@ -111,12 +108,15 @@ property_data = {
 # Generate PDF
 summary_text = f"This is a {metrics['Grade']}-grade rental with upside potential"
 pdf_bytes = generate_pdf(property_data, metrics, summary_text)
-
-# IRR and Equity Multiple
-st.subheader("📈 Long-Term Metrics")
-col1, col2 = st.columns(2)
-col1.metric("IRR (%)", f"{metrics.get('irr (%)', 0):.2f}")
-col2.metric("Equity Multiple", f"{metrics.get('equity_multiple', 0):.2f}")
+#if pdf_bytes is not None:
+    #st.download_button(
+        #label="📄 Download PDF Report",
+        #data=pdf_bytes,
+        #file_name="real_estate_report.pdf",
+        #mime="application/pdf"
+    #)
+#else:
+    #st.error("⚠️ PDF generation failed. Please check your input or logs.")
 
 # Plotting
 # 📈 10-Year Cash Flow Projection
@@ -159,6 +159,26 @@ if pdf_bytes is not None:
     )
 else:
     st.error("⚠️ PDF generation failed. Please check your input or logs.")
+
+# Download
+#st.download_button(
+    #label="📄 Download PDF Report",
+    #data=pdf_bytes,
+    #file_name="real_estate_report.pdf",
+    #mime="application/pdf"
+#)
+
+# After all st.write(metrics) or st.dataframe(...) or st.pyplot(...) calls
+
+# Add this:
+#st.markdown("---")
+#with open("User_Manual_Investment_Metrics_Explained_Styled_Final.pdf", "rb") as f:
+    #st.download_button(
+        #label="📘 Download User Manual (PDF)",
+        #data=f,
+        #file_name="Investment_Metrics_User_Guide.pdf",
+        #mime="application/pdf"
+    #)
 
 # Email Section
 st.markdown("### 📨 Email This Report")
