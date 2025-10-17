@@ -41,7 +41,7 @@ st.markdown("""<div style='text-align: center; margin-top: -40px;'><h1>🏡 Real
 #st.markdown("### 🧾 Property & Loan Inputs")
 
 st.markdown("---")
-with open("User_Manual_Investment_Metrics_Explained_Styled_Final.pdf", "rb") as f:
+with open("pages/Investment_Metrics_User_Guide.pdf", "rb") as f:
     st.download_button(
         label="📘 Download User Manual (PDF)",
         data=f,
